@@ -1,0 +1,74 @@
+const path = require('path')
+const express = require('express')
+const hbs = require('hbs')
+
+const app = express()
+
+// Define paths for Express config
+const pathDirectoryPath = path.join(__dirname, '../public')
+const viewsPath = path.join(__dirname, '../templates/views')
+const partialsPath = path.join(__dirname, '../templates/partials')
+
+// Set a value to given express setting
+// Setup handlesbars engine and views location
+app.set('view engine', 'hbs')
+app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
+
+// Setup static directory to serve
+app.use(express.static(pathDirectoryPath))
+
+// Route handler
+// app.com
+app.get('', (req, res) => {
+    res.render('index', {
+        title: 'Weather',
+        name: 'Aditya Jaiswal'
+    })
+})
+
+// app.com/help
+app.get('/help', (req, res) => {
+    res.render('help', {
+        title: 'Help',
+        helpText: 'This is some helpful text.',
+        name: 'Aditya Jaiswal'
+    })
+})
+
+// app.com/about
+app.get('/about', (req, res) => {
+    res.render('about', {
+        title: 'About me',
+        name: 'Aditya Jaiswal'
+    })
+})
+
+// app.com/weather
+app.get('/weather', (req, res) => {
+    res.send({
+        forecast: 'It is snowing',
+        location: 'Surat'
+    })
+})
+
+app.get('/help/*', (req, res) => {
+    res.render('404', {
+        title: '404',
+        name: 'Aditya Jaiswal',
+        errorMessage: 'Help article not found',
+    })
+})
+
+app.get('*', (req, res) => {
+    res.render('404', {
+        title: '404',
+        name: 'Aditya Jaiswal',
+        errorMessage: 'Page not found',
+    })
+})
+
+// Starting your own server
+app.listen(3000, () => {
+    console.log('Server is up on port 3000.')
+})
